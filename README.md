@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mimbar Pro
 
-## Getting Started
+Mimbar Pro is a robust Software-as-a-Service (SaaS) application designed to effortlessly generate high-quality, personalized Islamic religious sermons using advanced AI.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Highly Customizable Sermons:** Tailor every sermon to your exact needs by specifying:
+  - **Type of Sermon:** Khutbah Jumat (Friday sermon), Ramadan lectures, short reminders (kultum), or general gatherings.
+  - **Tone & Style:** Choose the emotional resonance and delivery style of the speech.
+  - **Language:** Extensive multi-language support.
+  - **Title & Theme:** Set the core topic or focus of the sermon.
+- **AI-Powered Generation:** Leverages advanced AI workflows and agents (via n8n) to craft coherent, inspiring, and contextually accurate sermon materials.
+- **Modern & Fast User Interface:** Built for an optimal user experience with cutting-edge web technologies.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Technology Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend:** [Next.js](https://nextjs.org/) (App Router), [React](https://react.dev/) 19
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) v4 & [@tailwindcss/typography](https://github.com/tailwindlabs/tailwindcss-typography)
+- **Icons & UI:** [Lucide React](https://lucide.dev/)
+- **Markdown Rendering:** [React Markdown](https://github.com/remarkjs/react-markdown) for rich text sermon previews
+- **Automation:** n8n (for AI agent orchestration)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Getting Started
 
-## Learn More
+Follow these steps to set up the project locally:
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js (v20 or higher recommended)
+- npm, yarn, or pnpm
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ichzid/mimbar-pro.git
+   cd mimbar-pro
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 📝 Scripts
+
+- `npm run dev`: Starts the development server.
+- `npm run build`: Builds the app for production.
+- `npm start`: Runs the built app in production mode.
+- `npm run lint`: Runs ESLint to catch errors in the code.
+
+## 📄 License
+
+This project is proprietary and confidential. All rights reserved.
