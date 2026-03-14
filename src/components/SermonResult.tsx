@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown";
-import { Copy, Download, Share2, Check, Coffee, Heart } from "lucide-react";
+import { Copy, Download, Check, Heart } from "lucide-react";
 import { useState } from "react";
 
 interface SermonResultProps {

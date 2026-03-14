@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, MessageCircle, Clock, Users, BookOpen, ToggleLeft, ToggleRight, Loader2, PenTool } from "lucide-react";
+import { Sparkles, MessageCircle, Clock, Users, BookOpen, Loader2, PenTool } from "lucide-react";
 import { toast } from "react-toastify";
 
 const TYPES = [
