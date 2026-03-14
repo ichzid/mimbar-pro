@@ -8,9 +8,9 @@ const TYPES = [
   { id: "kultum", label: "Kultum" },
   { id: "pengajian_rutin", label: "Pengajian Rutin" },
   { id: "khotbah_jumat", label: "Khotbah Jumat" },
-  { id: "tausiyah_kematian", label: "Tausiyah Takziyah (Belasungkawa)" },
   { id: "ceramah_hari_raya", label: "Ceramah Hari Raya" },
   { id: "kajian_keluarga", label: "Kajian Keluarga/Nikah" },
+  { id: "tausiyah_kematian", label: "Tausiyah Takziyah (Belasungkawa)" },
 ];
 
 const AUDIENCES = [
@@ -238,7 +238,7 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
           <div className="flex gap-2 flex-col sm:flex-row">
             <input
               type="text"
-              placeholder="Contoh: Sabar dalam menghadapi cobaan..."
+              placeholder="Contoh: Sabar & Shalat..."
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               className="flex-1 w-full border border-gray-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
@@ -247,7 +247,7 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
               type="button"
               onClick={handleSuggestTopic}
               disabled={isSuggesting}
-              className="cursor-pointer px-4 py-3 h-full bg-emerald-50/80 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-800/40 font-medium rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-100 dark:border-emerald-800/30 whitespace-nowrap"
+              className="cursor-pointer px-4 py-3 h-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800/60 font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-200 dark:border-emerald-700/50 whitespace-nowrap shadow-sm"
             >
               {isSuggesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
               <span>Bantu Cari Topik</span>
