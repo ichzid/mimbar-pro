@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown";
-import { Copy, Download, Share2, Check } from "lucide-react";
+import { Copy, Download, Share2, Check, Coffee, Heart } from "lucide-react";
 import { useState } from "react";
 
 interface SermonResultProps {
@@ -139,9 +139,19 @@ export default function SermonResult({ content }: SermonResultProps) {
         </div>
       </div>
       
-      {/* Footer Info */}
-      <div className="px-5 py-3 sm:px-8 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 text-xs text-gray-500 dark:text-gray-400 text-center">
-        Disusun oleh MimbarPro MVP
+      {/* Footer Info & Donasi */}
+      <div className="px-5 py-4 sm:px-8 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/80 text-xs text-gray-500 dark:text-gray-400 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span>Disusun oleh MimbarPro</span>
+        
+        <a 
+          href="https://saweria.co/ichzid" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 dark:bg-emerald-900/40 dark:hover:bg-emerald-900/60 dark:text-emerald-400 px-4 py-1.5 rounded-full font-semibold transition-colors duration-300 shadow-sm"
+        >
+          <Heart className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          Infaq Perawatan Server
+        </a>
       </div>
     </div>
   );

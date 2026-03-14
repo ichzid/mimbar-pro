@@ -4,10 +4,16 @@ export async function POST(req: Request) {
   try {
     const preferences = await req.json();
 
-    const apiKey = process.env.GEMINI_API_KEY;
     const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
-    if (!apiKey || apiKey === "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") {
+    // Mengumpulkan semua API Key yang tersedia (Utama + Cadangan)
+    const apiKeys = [
+      process.env.GEMINI_API_KEY,
+      process.env.GEMINI_API_KEY_BACKUP_1,
+      process.env.GEMINI_API_KEY_BACKUP_2
+    ].filter(Boolean) as string[];
+
+    if (apiKeys.length === 0 || apiKeys[0] === "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") {
       return NextResponse.json({ 
         content: `**Simulasi Hasil Ceramah**\n\nGEMINI_API_KEY belum dikonfigurasi dengan benar di file .env.local Anda.\n\nPreferensi yang Anda kirimkan:\n- Topik: ${preferences.topic}\n- Jenis: ${preferences.type}\n- Durasi: ${preferences.duration}` 
       });
@@ -47,36 +53,51 @@ CONTOH STRUKTUR JSON YANG DIHARAPKAN:
   "content": "Assalamu'alaikum warahmatullahi wabarakatuh...\\n\\n## Pendahuluan\\n\\nPuji syukur..."
 }`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          responseMimeType: "application/json"
-        }
-      }),
-    });
+    let parsedContent = null;
+    let lastError = null;
+    let isSuccess = false;
 
-    if (!response.ok) {
-      throw new Error(`Gemini API responded with status: ${response.status}`);
+    // Loop mencoba satu per satu API Key
+    for (const key of apiKeys) {
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": key
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              responseMimeType: "application/json"
+            }
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Gemini API responded with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const content = data.candidates[0].content.parts[0].text;
+        parsedContent = JSON.parse(content);
+
+        // Berhasil mendapatkan respons, tandai sukses dan hentikan loop
+        isSuccess = true;
+        break;
+        
+      } catch (err) {
+        console.warn(`[Generate API] Key gagal, mencoba kunci cadangan berikutnya...`);
+        lastError = err;
+        // Akan otomatis lanjut ke putaran berikutnya (key cadangan selanjutnya)
+      }
     }
 
-    const data = await response.json();
-    const content = data.candidates[0].content.parts[0].text;
-    const parsedContent = JSON.parse(content);
+    // Jika setelah semua putaran gagal, lemparkan error untuk memicu Fallback Statik
+    if (!isSuccess) {
+      throw lastError || new Error("Semua API Key (Utama & Cadangan) telah gagal/habis limit.");
+    }
 
     return NextResponse.json(parsedContent);
 

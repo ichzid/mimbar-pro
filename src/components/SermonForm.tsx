@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { Sparkles, MessageCircle, Clock, Users, BookOpen, ToggleLeft, ToggleRight, Loader2, PenTool } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const TYPES = [
-  { id: "khotbah_jumat", label: "Khotbah Jumat" },
   { id: "kultum", label: "Kultum" },
   { id: "pengajian_rutin", label: "Pengajian Rutin" },
-  { id: "tausiyah_kematian", label: "Tausiyah Kematian" },
+  { id: "khotbah_jumat", label: "Khotbah Jumat" },
+  { id: "tausiyah_kematian", label: "Tausiyah Takziyah (Belasungkawa)" },
   { id: "ceramah_hari_raya", label: "Ceramah Hari Raya" },
   { id: "kajian_keluarga", label: "Kajian Keluarga/Nikah" },
 ];
@@ -45,7 +45,7 @@ interface SermonFormProps {
 
 export default function SermonForm({ onGenerated, isLoading, setIsLoading }: SermonFormProps) {
   const [topic, setTopic] = useState("");
-  const [selectedType, setSelectedType] = useState("khotbah_jumat");
+  const [selectedType, setSelectedType] = useState("kultum");
   const [selectedAudience, setSelectedAudience] = useState("umum");
   const [selectedTone, setSelectedTone] = useState("menggugah");
   const [selectedDuration, setSelectedDuration] = useState("sedang");
@@ -105,13 +105,13 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
       // Menyesuaikan dengan struktur data n8n
       if (data.content) {
         onGenerated(data.content);
-        toast.success("Yeay! Teks ceramah berhasil dibuat 🚀");
+        toast.success("Teks ceramah berhasil dibuat");
       } else if (data[0] && data[0].content) {
         onGenerated(data[0].content);
-        toast.success("Yeay! Teks ceramah berhasil dibuat 🚀");
+        toast.success("Teks ceramah berhasil dibuat");
       } else if (typeof data === 'string') {
         onGenerated(data);
-        toast.success("Yeay! Teks ceramah berhasil dibuat 🚀");
+        toast.success("Teks ceramah berhasil dibuat");
       }
     } catch (error) {
       console.error("Failed to generate sermon", error);
