@@ -1,78 +1,84 @@
 # 🕌 MimbarPro - AI Asisten Dakwah
 
-MimbarPro adalah aplikasi Software-as-a-Service (SaaS) mutakhir berbasis **Kecerdasan Buatan (AI)** yang dirancang khusus untuk mempermudah para Da'i, Ustadz, dan umat Muslim dalam meracik teks ceramah berkualitas tinggi, inspiratif, dan selalu berlandaskan dalil yang sahih hanya dalam hitungan detik. 
+MimbarPro adalah aplikasi SaaS berbasis **AI** yang dirancang untuk membantu para Da'i, Ustadz, dan umat Muslim dalam membuat naskah ceramah berkualitas tinggi, inspiratif, dan berlandaskan dalil yang sahih — hanya dalam hitungan detik.
 
-Aplikasi ini dapat diakses pada semua perangkat (Responsif) serta memanfaatkan kekuatan **Google Gemini AI** untuk menghasilkan naskah ceramah lengkap dengan pengaturan bahasa dan target audiens yang detail.
+Bisa diakses di semua perangkat (responsif) dan menggunakan **Google Gemini AI** untuk menghasilkan naskah ceramah lengkap dengan pengaturan bahasa dan target audiens yang fleksibel.
 
 ---
 
 ## ✨ Fitur Utama
-* **🧠 Pembuat Naskah Super Cepat:** Hasilkan ceramah Khotbah, Kultum, maupun Tausiyah lengkap dengan Mukadimah & Doa penutup otomatis.
-* **🎯 Personalisasi Dakwah Tinggi:** Anda dapat mengatur parameter ceramah sesuai kebutuhan:
-  * **Jenis Kegiatan**: *Kultum, Pengajian Rutin, Khotbah Jumat, Tausiyah Takziyah, Ceramah Hari Raya, dan Kajian Keluarga*.
-  * **Target Audiens**: *Jamaah Umum, Milenial/Gen Z, Pekerja Kantoran, Ibu-ibu Majelis, hingga Anak-anak*.
-  * **Gaya Bahasa**: *Menggugah, Lembut (Menyentuh), Logis, Santai, hingga Bercerita (Storytelling)*.
-  * **Durasi Target**: *Singkat (5-7 Menit) hingga Ekstra Panjang (30+ Menit)*.
-* **📖 Integrasi Dalil Cerdas:** Fitur opsional untuk wajib menyematkan ayat suci Al-Quran dan Hadits (min. berderajat Hasan).
-* **💡 Asisten Penemu Topik:** Buntu ide? Cukup 1 kali klik, sistem secara acak-pintar *(smart shuffle)* memberikan ide topik dakwah yang relevan.
-* **⬇️ Export PDF Satu Klik:** Ubah langsung hasil ceramah yang indah ke dalam dokumen cetak (PDF). Tanpa melewati kotak dialog Print peramban yang memusingkan!
-* **🌗 Dark Mode:** Dukungan penuh mode gelap & terang (Sistem otomatis/manual toggle) untuk kenyamanan mata.
-* **🛡️ Fallback API Terjamin:** Sistem dirancang stabil dengan dukungan mekanisme "Jaring Penyelamat" (API Fallback) untuk menjaga layanan selalu menyala saat melebihi target batasan kuota *LLM API*.
+
+- **🧠 Pembuat Naskah Super Cepat** — Hasilkan ceramah lengkap dengan mukadimah dan doa penutup secara otomatis, cocok untuk Khotbah, Kultum, maupun Tausiyah.
+- **🎯 Personalisasi Dakwah** — Sesuaikan ceramah dengan kebutuhanmu:
+  - **Jenis Kegiatan**: Kultum, Pengajian Rutin, Khotbah Jumat, Tausiyah Takziyah, Ceramah Hari Raya, Kajian Keluarga
+  - **Target Audiens**: Jamaah Umum, Milenial/Gen Z, Pekerja Kantoran, Ibu-ibu Majelis, Anak-anak
+  - **Gaya Bahasa**: Menggugah, Lembut, Logis, Santai, Storytelling
+  - **Durasi**: Singkat (5-7 menit) sampai Ekstra Panjang (30+ menit)
+- **📖 Integrasi Dalil Otomatis** — Opsi untuk menyematkan ayat Al-Quran dan Hadits (minimal berderajat Hasan).
+- **💡 Generator Ide Topik** — Kehabisan ide? Satu klik langsung dapat topik dakwah yang relevan secara acak.
+- **⬇️ Export PDF Satu Klik** — Langsung cetak hasil ceramah ke PDF tanpa repot lewat dialog print browser.
+- **🌗 Dark Mode** — Dukungan mode gelap dan terang, bisa otomatis ikut sistem atau toggle manual.
+- **🛡️ API Fallback** — Sistem tetap stabil meski kuota API utama habis, karena ada mekanisme fallback ke key cadangan.
 
 ---
 
-## 🛠️ Stack Teknologi
+## 🛠️ Tech Stack
 
-Proyek ini dibangun menggunakan kumpulan ekosistem terbaru:
-* **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS v4
-* **Ikon & Antarmuka**: Lucide React, React Toastify, React Markdown
-* **Fitur Ekspor**: html2pdf.js
-* **Backend LLM**: Google Gemini 2.5 Flash API (REST Native Integration)
+- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS v4
+- **UI & Ikon**: Lucide React, React Toastify, React Markdown
+- **Export**: html2pdf.js
+- **AI Backend**: Google Gemini 2.5 Flash API (Native REST)
 
 ---
 
-## 🚀 Panduan Menjalankan di Komputer (Lokal)
+## 🚀 Cara Menjalankan Secara Lokal
 
-1. Tiru (Kloning) repositori ini:
-\`\`\`bash
+**1. Clone repo ini:**
+```bash
 git clone https://github.com/ichzid/mimbar-pro.git
 cd mimbar-pro
-\`\`\`
+```
 
-2. Pasang/Install seluruh dependensi:
-\`\`\`bash
+**2. Install dependensi:**
+```bash
 npm install
-\`\`\`
+```
 
-3. Duplikasi berkas sampel environment dan atur API Key Anda. (Daftar API Key gratis di Google AI Studio)
-\`\`\`bash
+**3. Buat file environment dan isi API Key kamu** (daftar gratis di [Google AI Studio](https://aistudio.google.com)):
+```bash
 cp .env.example .env.local
-\`\`\`
-Isi \`.env.local\` dengan:
-\`\`\`env
-# Model Gemini yang digunakan
+```
+
+Isi `.env.local` dengan:
+```env
+# Model Gemini yang dipakai
 GEMINI_MODEL="gemini-2.5-flash"
 
-# Primary Key
+# API Key utama
 GEMINI_API_KEY="AIzaSy_KUNCI_UTAMA_ANDA"
 
-# Backup (Optional - Digunakan saat Key Pertama kehabisan kuota limit)
+# Cadangan (opsional - aktif kalau key utama kehabisan kuota)
 GEMINI_API_KEY_BACKUP_1="AIzaSy_CADANGAN_1_ANDA"
 GEMINI_API_KEY_BACKUP_2="AIzaSy_CADANGAN_2_ANDA"
-\`\`\`
+```
 
-4. Jalankan mesin pengembangan!
-\`\`\`bash
+**4. Jalankan development server:**
+```bash
 npm run dev
-\`\`\`
-Aplikasi akan langsung mengudara di \`http://localhost:3000\`.
+```
 
-
-## 🤝 Donasi & Kontribusi
-Proyek ini bersifat terbuka untuk kontribusi publik. Layanan ini dibuat agar dapat dipergunakan gratis selamanya untuk amal jariyah bersama.
-
-Jika aplikasi ini bermanfaat bagi dakwah Anda, jangan ragu untuk berinfak membantu perawatan peladen (Server & Kuota Limit AI) di:
-💖 [Traktir Server (Infaq via Saweria)](https://saweria.co/ichzid)
+Aplikasi akan berjalan di `http://localhost:3000`.
 
 ---
-*Dipersiapkan dengan sepenuh hati oleh IchZid & AI Assistant.*
+
+## 🤝 Kontribusi & Donasi
+
+Proyek ini open source dan gratis selamanya — semoga jadi amal jariyah bersama.
+
+Kalau aplikasi ini bermanfaat untuk dakwahmu, kamu bisa bantu biaya server dan kuota AI di sini:
+
+💖 [Infaq via Saweria](https://saweria.co/ichzid)
+
+---
+
+*Dibuat dengan sepenuh hati oleh IchZid & AI Assistant.*
