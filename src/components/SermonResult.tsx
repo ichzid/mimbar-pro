@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import { Copy, Download, Check, Heart } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface SermonResultProps {
   content: string;
@@ -17,6 +18,19 @@ export default function SermonResult({ content }: SermonResultProps) {
       .trim();
   };
 
+  const getSermonTitle = (markdown: string) => {
+    // Cari baris pertama yang merupakan Heading Markdown (## Judul atau # Judul atau **Judul**)
+    const match = markdown.match(/^(?:#+|[*]*)\s*(.+)$/m);
+    
+    // Jika ketemu ambil huruf abjad & spasinya saja (max 50 char). Jika gagal, gunakan fallback
+    if (match && match[1]) {
+        let cleanTitle = match[1].replace(/[^\w\s-]/gi, '').trim().substring(0, 50);
+        return cleanTitle ? `MimbarPro - ${cleanTitle}.pdf` : 'MimbarPro - Teks Ceramah.pdf';
+    }
+    
+    return 'MimbarPro - Teks Ceramah.pdf';
+  };
+
   const handleCopy = () => {
     const plainText = stripMarkdown(content);
     navigator.clipboard.writeText(plainText);
@@ -24,81 +38,54 @@ export default function SermonResult({ content }: SermonResultProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     try {
       const element = document.getElementById("pdf-content");
       if (!element) return;
       
-      // We use a dynamically injected iframe to run standard browser printing,
-      // avoiding any color parsing bugs from html2pdf/html2canvas with Tailwind v4
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
+      const toastId = toast.loading("Mempersiapkan Unduhan PDF...");
       
-      const pri = iframe.contentWindow;
-      if (!pri) return;
-
-      pri.document.open();
-      pri.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>MimbarPro - Teks Ceramah</title>
-            <style>
-              @page { size: A4; margin: 15mm; }
-              body { 
-                font-family: serif; 
-                line-height: 1.6; 
-                color: #000; 
-                font-size: 14pt;
-              }
-              h1, h2, h3, h4 { color: #000; font-weight: bold; margin-bottom: 8px; }
-              h1 { font-size: 20pt; padding-bottom: 5px; margin-top: 20px; border-bottom: 2px solid #20bc82; }
-              h2 { font-size: 16pt; margin-top: 24px; }
-              h3 { font-size: 14pt; margin-top: 20px; }
-              p { margin-bottom: 16px; text-align: justify; }
-              ul, ol { margin-bottom: 16px; padding-left: 20px; }
-              li { margin-bottom: 8px; }
-              strong { font-weight: bold; }
-              
-              /* Optional Footer styling */
-              .footer { 
-                margin-top: 50px; 
-                padding-top: 15px; 
-                border-top: 1px solid #ccc; 
-                font-size: 10pt; 
-                color: #555; 
-                text-align: center; 
-                font-family: sans-serif;
-              }
-            </style>
-          </head>
-          <body>
-            ${element.innerHTML}
-            <div class="footer">
-              Teks Ceramah dipersiapkan menggunakan kecerdasan buatan dari MimbarPro (Mimbar Profesional)
-            </div>
-            
-            <script>
-              window.onload = function() {
-                setTimeout(function() {
-                  window.focus();
-                  window.print();
-                }, 250);
-              };
-            </script>
-          </body>
-        </html>
-      `);
-      pri.document.close();
-
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-      }, 5000); // Wait long enough for the print dialog to open before cleaning up
+      // Dynamic import to avoid SSR 'window is not defined' errors
+      const html2pdf = (await import("html2pdf.js")).default;
       
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = `
+        <div style="font-family: serif; line-height: 1.6; color: #000; font-size: 14pt;">
+          ${element.innerHTML}
+          <div style="margin-top: 50px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 10pt; color: #555; text-align: center; font-family: sans-serif;">
+            Teks Ceramah dipersiapkan menggunakan kecerdasan buatan dari MimbarPro
+          </div>
+        </div>
+      `;
+
+      // Inject robust inline styling to override tailwind reset/class bugs during html2canvas render
+      const headings = wrapper.querySelectorAll("h1, h2, h3, h4, p, li, strong");
+      headings.forEach(h => {
+          if (h.tagName === 'H1') h.setAttribute('style', 'font-size: 20pt; padding-bottom: 5px; margin-top: 20px; border-bottom: 2px solid #20bc82; color: #000; font-weight: bold; margin-bottom: 20px;');
+          if (h.tagName === 'H2') h.setAttribute('style', 'font-size: 16pt; margin-top: 24px; color: #000; font-weight: bold; margin-bottom: 12px;');
+          if (h.tagName === 'H3') h.setAttribute('style', 'font-size: 14pt; margin-top: 20px; color: #000; font-weight: bold; margin-bottom: 10px;');
+          if (h.tagName === 'P') h.setAttribute('style', 'margin-bottom: 16px; text-align: justify;');
+          if (h.tagName === 'LI') h.setAttribute('style', 'margin-bottom: 8px;');
+          if (h.tagName === 'STRONG') h.setAttribute('style', 'font-weight: bold;');
+      });
+
+      const pdfFileName = getSermonTitle(content);
+
+      const opt: any = {
+        margin:       15,
+        filename:     pdfFileName,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      await html2pdf().set(opt).from(wrapper).save();
+      
+      toast.update(toastId, { render: "PDF berhasil diunduh!", type: "success", isLoading: false, autoClose: 3000 });
+
     } catch (error) {
       console.error("Failed to generate PDF", error);
-      alert("Terjadi kesalahan saat membuat PDF.");
+      toast.error("Terjadi kesalahan saat membuat PDF.");
     }
   };
 

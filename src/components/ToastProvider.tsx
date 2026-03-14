@@ -29,7 +29,7 @@ export default function ToastProvider() {
       pauseOnHover
       theme="dark"
       toastClassName="!rounded-2xl !mb-3"
-      className="!w-[92%] sm:!w-fit !bottom-6 sm:!bottom-5 !left-1/2 !-translate-x-1/2"
+      className="!w-[92%] max-w-[400px] sm:!w-[320px] !bottom-6 sm:!bottom-5"
     />
   );
 }
