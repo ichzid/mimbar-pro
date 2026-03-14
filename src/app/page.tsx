@@ -16,8 +16,8 @@ export default function Home() {
       <header className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 shadow-sm sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center w-full">
           <div className="flex items-center gap-2">
-             <div className="bg-emerald-600 dark:bg-emerald-700 p-1.5 rounded-xl shadow-inner shadow-emerald-400/20">
-               <Image src="/icon.png" alt="MimbarPro Logo" width={28} height={28} className="object-cover" />
+             <div>
+               <Image src="/icon.png" alt="MimbarPro Logo" width={64} height={64} className="object-contain drop-shadow-sm" priority />
              </div>
              <div>
                <h1 className="text-xl font-bold font-serif text-emerald-950 dark:text-emerald-50">MimbarPro</h1>
