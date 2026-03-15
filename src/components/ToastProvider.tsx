@@ -62,6 +62,15 @@ export default function ToastProvider() {
         .Toastify__toast-icon svg { fill: #14b89a !important; }
         .Toastify__close-button { color: #14b89a !important; opacity: 0.7; }
         .Toastify__close-button:hover { opacity: 1; }
+        /* Fix centering on all screen sizes */
+        .Toastify__toast-container--bottom-center {
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          bottom: 24px !important;
+          width: min(92vw, 400px) !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
       `}</style>
 
       <ToastContainer
@@ -75,7 +84,7 @@ export default function ToastProvider() {
         draggable
         pauseOnHover
         theme={resolvedTheme === "dark" ? "dark" : "light"}
-        className="!w-[92%] max-w-[400px] sm:!w-[360px] !bottom-6 sm:!bottom-5"
+        className=""
       />
     </>
   );

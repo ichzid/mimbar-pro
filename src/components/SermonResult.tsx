@@ -54,21 +54,37 @@ export default function SermonResult({ content, topic }: SermonResultProps) {
           </div>
         </div>
       `;
-      wrapper.querySelectorAll("h1, h2, h3, h4, p, li, strong").forEach((h) => {
-        if (h.tagName === "H1") h.setAttribute("style", "font-size: 20pt; margin-top: 20px; border-bottom: 2px solid #14b89a; color: #000; font-weight: bold; margin-bottom: 20px; padding-bottom: 6px;");
-        if (h.tagName === "H2") h.setAttribute("style", "font-size: 16pt; margin-top: 24px; color: #000; font-weight: bold; margin-bottom: 12px;");
-        if (h.tagName === "H3") h.setAttribute("style", "font-size: 14pt; margin-top: 20px; color: #000; font-weight: bold; margin-bottom: 10px;");
-        if (h.tagName === "P")  h.setAttribute("style", "margin-bottom: 16px; text-align: justify;");
-        if (h.tagName === "LI") h.setAttribute("style", "margin-bottom: 8px;");
+      wrapper.querySelectorAll("h1, h2, h3, h4, p, li, strong, blockquote").forEach((h) => {
+        if (h.tagName === "H1") h.setAttribute("style", "font-size: 20pt; margin-top: 20px; border-bottom: 2px solid #14b89a; color: #000; font-weight: bold; margin-bottom: 20px; padding-bottom: 6px; page-break-after: avoid; page-break-inside: avoid;");
+        if (h.tagName === "H2") h.setAttribute("style", "font-size: 16pt; margin-top: 24px; color: #000; font-weight: bold; margin-bottom: 12px; page-break-after: avoid; page-break-inside: avoid;");
+        if (h.tagName === "H3") h.setAttribute("style", "font-size: 14pt; margin-top: 20px; color: #000; font-weight: bold; margin-bottom: 10px; page-break-after: avoid; page-break-inside: avoid;");
+        if (h.tagName === "H4") h.setAttribute("style", "font-size: 13pt; margin-top: 16px; color: #000; font-weight: bold; margin-bottom: 8px; page-break-after: avoid; page-break-inside: avoid;");
+        if (h.tagName === "P")  h.setAttribute("style", "margin-bottom: 14px; text-align: justify; page-break-inside: avoid; orphans: 3; widows: 3;");
+        if (h.tagName === "LI") h.setAttribute("style", "margin-bottom: 8px; page-break-inside: avoid;");
+        if (h.tagName === "BLOCKQUOTE") h.setAttribute("style", "margin: 16px 0; padding: 12px 16px; border-left: 3px solid #14b89a; color: #444; page-break-inside: avoid;");
+      });
+      // Tambahkan class html2pdf--page-break pada setiap elemen besar agar pagebreak lebih rapi
+      wrapper.querySelectorAll("h1, h2").forEach((h) => {
+        h.classList.add("html2pdf__page-break");
       });
       await html2pdf()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .set({
-          margin: 15,
+          margin: [15, 15, 20, 15],
           filename: getPdfFilename(),
           image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            scrollY: 0,
+          },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        })
+          pagebreak: {
+            mode: ["avoid-all", "css", "legacy"],
+            avoid: ["p", "li", "blockquote", "h1", "h2", "h3", "h4"],
+          },
+        } as any)
         .from(wrapper)
         .save();
       toast.update(toastId, { render: "PDF berhasil diunduh!", type: "success", isLoading: false, autoClose: 3000 });
