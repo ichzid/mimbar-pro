@@ -1,79 +1,95 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, MessageCircle, Clock, Users, BookOpen, Loader2, PenTool } from "lucide-react";
+import {
+  Sparkles, MessageCircle, Clock, Users, BookOpen,
+  Loader2, PenTool, ChevronRight
+} from "lucide-react";
 import { toast } from "react-toastify";
 
 const TYPES = [
-  { id: "kultum", label: "Kultum" },
-  { id: "pengajian_rutin", label: "Pengajian Rutin" },
-  { id: "khotbah_jumat", label: "Khotbah Jumat" },
-  { id: "ceramah_hari_raya", label: "Ceramah Hari Raya" },
-  { id: "kajian_keluarga", label: "Kajian Keluarga/Nikah" },
-  { id: "tausiyah_kematian", label: "Tausiyah Takziyah (Belasungkawa)" },
+  { id: "kultum",              label: "Kultum",           icon: "🕌" },
+  { id: "pengajian_rutin",     label: "Pengajian Rutin",  icon: "📖" },
+  { id: "khotbah_jumat",       label: "Khotbah Jumat",    icon: "🕋" },
+  { id: "ceramah_hari_raya",   label: "Ceramah Hari Raya",icon: "🌙" },
+  { id: "kajian_keluarga",     label: "Kajian Nikah",     icon: "💍" },
+  { id: "tausiyah_kematian",   label: "Tausiyah Takziyah",icon: "🤲" },
 ];
 
 const AUDIENCES = [
-  { id: "umum", label: "Jamaah Umum / Masyarakat Masjid", desc: "Campuran berbagai usia, profesi. Bahasa sederhana, tema universal (syukur, sabar, shalat)." },
-  { id: "milenial", label: "Anak Muda (Milenial / Gen Z)", desc: "Bahasa relatable, relevan dengan tren (sosmed, mental health), tidak menggurui." },
-  { id: "ibu-ibu", label: "Ibu-ibu / Majelis Taklim", desc: "Seputar keluarga, mendidik anak, fiqih wanita. Interaktif dan emosional." },
-  { id: "profesional", label: "Pekerja / Profesional", desc: "Audiens sibuk. Materi aplikatif kerja (etos kerja, rezeki halal, manajemen stres)." },
-  { id: "keluarga", label: "Keluarga / Calon Pasangan", desc: "Fokus manajemen konflik rumah tangga, hak kewajiban suami istri, parenting." },
-  { id: "anak-anak", label: "Pelajar / Anak-anak", desc: "Bahasa sangat sederhana, banyak ilustrasi, cerita, dan interaksi/kuis." },
+  { id: "umum",         label: "Jamaah Umum",        desc: "Campuran berbagai usia, bahasa universal", icon: "🕌" },
+  { id: "milenial",     label: "Anak Muda",           desc: "Relatable, relevan, tidak menggurui",      icon: "📱" },
+  { id: "ibu-ibu",      label: "Ibu-ibu / Majelis",  desc: "Keluarga, fiqih wanita, emosional",        icon: "👩" },
+  { id: "profesional",  label: "Pekerja Profesional", desc: "Etos kerja, rezeki halal, aplikatif",      icon: "💼" },
+  { id: "keluarga",     label: "Keluarga / Pasangan", desc: "Rumah tangga Islami & parenting",          icon: "👨‍👩‍👧" },
+  { id: "anak-anak",    label: "Pelajar / Anak",      desc: "Sederhana, ceria, banyak ilustrasi",       icon: "🎒" },
 ];
 
 const TONES = [
-  { id: "menggugah", label: "Menggugah & Semangat" },
-  { id: "lembut", label: "Lembut & Menyentuh" },
-  { id: "logis", label: "Logis & Akademis" },
-  { id: "santai", label: "Santai & Humoris" },
-  { id: "tegas", label: "Tegas (Peringatan)" },
-  { id: "bercerita", label: "Bercerita (Storytelling)" },
+  { id: "menggugah",  label: "Menggugah",  icon: "🔥" },
+  { id: "lembut",     label: "Lembut",     icon: "🌷" },
+  { id: "logis",      label: "Akademis",   icon: "🧠" },
+  { id: "santai",     label: "Santai",     icon: "😊" },
+  { id: "tegas",      label: "Tegas",      icon: "⚡" },
+  { id: "bercerita",  label: "Storytelling", icon: "📚" },
 ];
 
 const DURATIONS = [
-  { id: "singkat", label: "5-7 Menit" },
-  { id: "sedang", label: "15 Menit" },
-  { id: "panjang", label: "30+ Menit" },
+  { id: "singkat", label: "5 – 7 Menit",  icon: "⚡" },
+  { id: "sedang",  label: "15 Menit",     icon: "🕐" },
+  { id: "panjang", label: "30+ Menit",    icon: "📜" },
 ];
 
 interface SermonFormProps {
   onGenerated: (result: string) => void;
+  onTopicChange: (topic: string) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
 }
 
-export default function SermonForm({ onGenerated, isLoading, setIsLoading }: SermonFormProps) {
+/* ===================================================
+   Section Label Component
+=================================================== */
+function SectionLabel({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
+  return (
+    <label className="flex items-center gap-2 text-sm font-semibold text-brand-800 dark:text-brand-200 mb-3">
+      <span className="flex items-center justify-center w-6 h-6 rounded-md bg-brand-100 dark:bg-brand-900/40">
+        <Icon className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+      </span>
+      {label}
+    </label>
+  );
+}
+
+/* ===================================================
+   Main Form
+=================================================== */
+export default function SermonForm({ onGenerated, onTopicChange, isLoading, setIsLoading }: SermonFormProps) {
   const [topic, setTopic] = useState("");
+
+  const updateTopic = (value: string) => {
+    setTopic(value);
+    onTopicChange(value);
+  };
   const [selectedType, setSelectedType] = useState("kultum");
   const [selectedAudience, setSelectedAudience] = useState("umum");
   const [selectedTone, setSelectedTone] = useState("menggugah");
   const [selectedDuration, setSelectedDuration] = useState("sedang");
   const [requireDalil, setRequireDalil] = useState(true);
-
   const [isSuggesting, setIsSuggesting] = useState(false);
 
   const handleSuggestTopic = async () => {
     setIsSuggesting(true);
     try {
-      // Memanggil Internal Next.js API kita sendiri (menjaga secret env variable)
       const res = await fetch("/api/topics", {
-        method: "POST", 
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: selectedType })
+        body: JSON.stringify({ type: selectedType }),
       });
-      
       const data = await res.json();
-      
-      // Menyesuaikan dengan struktur data n8n (biasanya array berisi object)
-      // Contoh: n8n mengembalikan { topics: ["Sabar", "Syukur"] } atau sekadar teks
-      if (data.topics && data.topics.length > 0) {
-        setTopic(data.topics[0]); 
-      } else if (data[0] && data[0].topic) {
-        setTopic(data[0].topic);
-      } else if (typeof data === 'string') {
-        setTopic(data);
-      }
+      if (data.topics && data.topics.length > 0) updateTopic(data.topics[0]);
+      else if (data[0] && data[0].topic) updateTopic(data[0].topic);
+      else if (typeof data === "string") updateTopic(data);
     } catch (error) {
       console.error("Failed to fetch topics", error);
     } finally {
@@ -84,14 +100,12 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      // Memanggil Internal API kita (ini akan diteruskan secara aman ke n8n oleh backend)
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic: topic || "Pentingnya Menjaga Lisan", // Fallback if empty
+          topic: topic || "Pentingnya Menjaga Lisan",
           type: selectedType,
           audience: selectedAudience,
           tone: selectedTone,
@@ -99,17 +113,14 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
           requireDalil,
         }),
       });
-
       const data = await res.json();
-      
-      // Menyesuaikan dengan struktur data n8n
       if (data.content) {
         onGenerated(data.content);
         toast.success("Teks ceramah berhasil dibuat");
       } else if (data[0] && data[0].content) {
         onGenerated(data[0].content);
         toast.success("Teks ceramah berhasil dibuat");
-      } else if (typeof data === 'string') {
+      } else if (typeof data === "string") {
         onGenerated(data);
         toast.success("Teks ceramah berhasil dibuat");
       }
@@ -121,169 +132,216 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden text-gray-800 dark:text-gray-100">
-      <div className="p-5 sm:p-6 pb-4 border-b border-gray-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
-        <h2 className="text-xl font-bold font-serif text-slate-900 dark:text-slate-100">Mulai Buat Ceramah Sekarang</h2>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 opacity-80">Sesuaikan preferensi ceramah Anda</p>
+    <div
+      className="glass-card rounded-2xl overflow-hidden shadow-xl shadow-brand-900/10 dark:shadow-brand-900/30"
+      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+    >
+      {/* === Card Header === */}
+      <div className="relative p-5 sm:p-6 pb-4 overflow-hidden">
+        {/* Gold accent top border */}
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" />
+
+        {/* Decorative arabic star */}
+        <div className="absolute right-5 top-4 text-4xl text-brand-200/20 dark:text-brand-700/20 select-none pointer-events-none"
+          style={{ fontFamily: 'var(--font-amiri), serif' }}>
+          ✦
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-10 rounded-full bg-gradient-to-b from-gold-400 to-brand-500" />
+          <div>
+            <h2
+              className="text-lg font-bold text-brand-900 dark:text-white"
+              style={{ fontFamily: 'var(--font-amiri), serif' }}
+            >
+              Mulai Buat Ceramah Sekarang
+            </h2>
+            <p className="text-xs text-brand-600/70 dark:text-brand-400/70 mt-0.5">
+              Sesuaikan preferensi ceramah Anda di bawah ini
+            </p>
+          </div>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-6 bg-white dark:bg-slate-900">
-        {/* Jenis Ceramah dipindahkan ke paling atas */}
+      <div className="h-px bg-gradient-to-r from-transparent via-brand-200/60 dark:via-brand-700/40 to-transparent" />
+
+      {/* === Form Body === */}
+      <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-7">
 
         {/* Jenis Ceramah */}
-        <div className="space-y-3">
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
-            <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /> Jenis Ceramah
-          </label>
-          <div className="flex flex-wrap gap-2">
+        <div>
+          <SectionLabel icon={BookOpen} label="Jenis Ceramah" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {TYPES.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setSelectedType(t.id)}
-                className={`cursor-pointer px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                className={`cursor-pointer relative px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left flex items-center gap-2 border ${
                   selectedType === t.id
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-200 dark:shadow-none"
-                    : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200/60 dark:border-slate-700"
+                    ? "bg-brand-600 text-white border-brand-700 shadow-lg shadow-brand-500/30 dark:shadow-brand-900/40 scale-[1.02]"
+                    : "bg-white/60 dark:bg-white/5 text-brand-800 dark:text-brand-200 border-brand-100/60 dark:border-brand-700/20 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:border-brand-300 dark:hover:border-brand-600"
                 }`}
               >
-                {t.label}
+                <span className="text-base">{t.icon}</span>
+                <span className="leading-tight">{t.label}</span>
+                {selectedType === t.id && (
+                  <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-gold-300" />
+                )}
               </button>
             ))}
           </div>
         </div>
 
         {/* Target Jamaah */}
-        <div className="space-y-3">
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
-            <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /> Target Jamaah
-          </label>
+        <div>
+          <SectionLabel icon={Users} label="Target Jamaah" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {AUDIENCES.map((a) => (
-               <button
-               key={a.id}
-               type="button"
-               onClick={() => setSelectedAudience(a.id)}
-               className={`cursor-pointer text-left p-3 rounded-xl transition-all border ${
-                 selectedAudience === a.id
-                   ? "bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 shadow-sm"
-                   : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50"
-               }`}
-             >
-               <div className={`text-sm font-bold ${selectedAudience === a.id ? "text-emerald-800 dark:text-emerald-400" : "text-gray-700 dark:text-gray-200"}`}>
-                 {a.label}
-               </div>
-               <div className={`text-[11px] mt-1 line-clamp-2 ${selectedAudience === a.id ? "text-emerald-600/80 dark:text-emerald-400/80" : "text-gray-500 dark:text-gray-400"}`}>
-                 {a.desc}
-               </div>
-             </button>
+              <button
+                key={a.id}
+                type="button"
+                onClick={() => setSelectedAudience(a.id)}
+                className={`cursor-pointer text-left px-4 py-3 rounded-xl transition-all duration-200 border group ${
+                  selectedAudience === a.id
+                    ? "bg-brand-600/10 dark:bg-brand-400/10 border-brand-400 dark:border-brand-500"
+                    : "bg-white/50 dark:bg-white/5 border-brand-100/50 dark:border-brand-800/30 hover:border-brand-300 dark:hover:border-brand-600 hover:bg-brand-50/50 dark:hover:bg-brand-900/10"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{a.icon}</span>
+                  <div>
+                    <div className={`text-sm font-semibold transition-colors ${
+                      selectedAudience === a.id
+                        ? "text-brand-700 dark:text-brand-300"
+                        : "text-brand-900 dark:text-brand-100 group-hover:text-brand-700 dark:group-hover:text-brand-300"
+                    }`}>
+                      {a.label}
+                    </div>
+                    <div className={`text-[11px] mt-0.5 line-clamp-1 transition-colors ${
+                      selectedAudience === a.id
+                        ? "text-brand-600/80 dark:text-brand-400/80"
+                        : "text-brand-600/50 dark:text-brand-400/50"
+                    }`}>
+                      {a.desc}
+                    </div>
+                  </div>
+                </div>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Tone/Gaya & Durasi */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-          <div className="space-y-3">
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
-              <MessageCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /> Gaya Bahasa
-            </label>
+        {/* Gaya Bahasa & Durasi */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Gaya Bahasa */}
+          <div>
+            <SectionLabel icon={MessageCircle} label="Gaya Bahasa" />
             <div className="flex flex-wrap gap-2">
               {TONES.map((t) => (
                 <button
                   key={t.id}
                   type="button"
                   onClick={() => setSelectedTone(t.id)}
-                  className={`cursor-pointer px-3 py-2 rounded-lg text-sm transition-all ${
+                  className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 border ${
                     selectedTone === t.id
-                      ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800 border font-medium"
-                      : "bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700"
+                      ? "bg-gold-500/10 dark:bg-gold-400/10 text-gold-700 dark:text-gold-300 border-gold-400/60 dark:border-gold-500/40"
+                      : "bg-white/50 dark:bg-white/5 text-brand-700 dark:text-brand-300 border-brand-100/50 dark:border-brand-800/30 hover:border-brand-300 dark:hover:border-brand-600"
                   }`}
                 >
+                  <span>{t.icon}</span>
                   {t.label}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
-              <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /> Durasi
-            </label>
-            <div className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
+          {/* Durasi */}
+          <div>
+            <SectionLabel icon={Clock} label="Durasi Ceramah" />
+            <div className="grid grid-cols-3 gap-2">
               {DURATIONS.map((d) => (
                 <button
                   key={d.id}
                   type="button"
                   onClick={() => setSelectedDuration(d.id)}
-                  className={`cursor-pointer flex-1 py-2 px-1 text-xs sm:text-sm font-medium rounded-lg transition-all ${
+                  className={`cursor-pointer flex flex-col items-center gap-1 py-3 rounded-xl text-xs font-semibold transition-all duration-200 border ${
                     selectedDuration === d.id
-                      ? "bg-white dark:bg-slate-600 text-gray-900 dark:text-white shadow-sm"
-                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      ? "bg-brand-600 text-white border-brand-700 shadow-md shadow-brand-500/25 scale-[1.03]"
+                      : "bg-white/50 dark:bg-white/5 text-brand-700 dark:text-brand-300 border-brand-100/50 dark:border-brand-800/30 hover:border-brand-300 dark:hover:border-brand-600"
                   }`}
                 >
-                  {d.label}
+                  <span className="text-base">{d.icon}</span>
+                  <span>{d.label}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <hr className="border-gray-100 dark:border-slate-800" />
+        {/* Gold separator */}
+        <div className="gold-divider" />
 
-        {/* Topic Input (Moved here) */}
-        <div className="space-y-3">
-          <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
-            <PenTool className="w-4 h-4 text-emerald-600 dark:text-emerald-500" /> Topik atau Tema
-          </label>
+        {/* Topik / Tema */}
+        <div>
+          <SectionLabel icon={PenTool} label="Topik atau Tema" />
           <div className="flex gap-2 flex-col sm:flex-row">
-            <input
-              type="text"
-              placeholder="Contoh: Sabar & Shalat..."
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              className="flex-1 w-full border border-gray-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
-            />
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Contoh: Sabar dalam Ujian, Keutamaan Shalat..."
+                value={topic}
+                onChange={(e) => updateTopic(e.target.value)}
+                className="w-full bg-white/70 dark:bg-white/5 border border-brand-200/60 dark:border-brand-700/30 rounded-xl px-4 py-3 text-sm text-brand-900 dark:text-white placeholder:text-brand-400/60 dark:placeholder:text-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-400 transition-all"
+              />
+            </div>
             <button
               type="button"
               onClick={handleSuggestTopic}
               disabled={isSuggesting}
-              className="cursor-pointer px-4 py-3 h-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-800/60 font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-200 dark:border-emerald-700/50 whitespace-nowrap shadow-sm"
+              className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 border
+                bg-gold-50 dark:bg-gold-900/20 text-gold-800 dark:text-gold-300 border-gold-200 dark:border-gold-700/40
+                hover:bg-gold-100 dark:hover:bg-gold-800/30 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm whitespace-nowrap"
             >
-              {isSuggesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-              <span>Bantu Cari Topik</span>
+              {isSuggesting
+                ? <Loader2 className="w-4 h-4 animate-spin" />
+                : <Sparkles className="w-4 h-4" />
+              }
+              Bantu Cari Topik
             </button>
           </div>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1 pl-1">
-            <span className="hidden sm:inline">Klik tombol di samping untuk mendapatkan ide topik instan dari AI berdasarkan pilihan tipe ceramah.</span>
-            <span className="inline sm:hidden">Klik tombol di atas untuk mendapatkan ide topik otomatis.</span>
+          <p className="text-[11px] text-brand-500/70 dark:text-brand-400/50 mt-2 pl-1">
+            Kosongkan jika ingin AI memilih topik berdasarkan jenis & audiens. Atau klik &quot;Bantu Cari Topik&quot; untuk saran instan.
           </p>
         </div>
 
-        <hr className="border-gray-100 dark:border-slate-800" />
-
         {/* Dalil Toggle */}
-        <div className="flex items-center justify-between bg-gray-50/50 dark:bg-slate-800/50 p-4 rounded-xl border border-gray-100 dark:border-slate-700/50">
+        <div className="flex items-center justify-between bg-brand-50/80 dark:bg-brand-900/20 border border-brand-100/60 dark:border-brand-700/20 rounded-xl px-4 py-3.5">
           <div>
-             <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200">Sertakan Dalil Sahih</h4>
-             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Ayat Al-Quran & Hadits (min. Hasan)</p>
+            <h4 className="text-sm font-bold text-brand-900 dark:text-brand-100 flex items-center gap-1.5">
+              📜 Sertakan Dalil Sahih
+            </h4>
+            <p className="text-xs text-brand-600/70 dark:text-brand-400/60 mt-0.5">
+              Ayat Al-Quran & Hadits (min. derajat Hasan)
+            </p>
           </div>
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={() => setRequireDalil(!requireDalil)}
             role="switch"
             aria-checked={requireDalil}
-            className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${
-              requireDalil ? "bg-emerald-500" : "bg-gray-200 dark:bg-slate-600"
+            className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500  ${
+              requireDalil
+                ? "bg-brand-500"
+                : "bg-brand-200/50 dark:bg-brand-800/50"
             }`}
           >
-            <span className="sr-only">Toggle Dalil Sahih</span>
+            <span className="sr-only">Toggle Dalil</span>
             <span
-              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
-                requireDalil ? "translate-x-3" : "-translate-x-3"
+              className={`inline-block h-5 w-5 rounded-full bg-white shadow-md transition-transform duration-300 ${
+                requireDalil ? "translate-x-6" : "translate-x-1"
               }`}
-            >
-              {requireDalil && <Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
-            </span>
+            />
           </button>
         </div>
 
@@ -291,16 +349,29 @@ export default function SermonForm({ onGenerated, isLoading, setIsLoading }: Ser
         <button
           type="submit"
           disabled={isLoading}
-          className="cursor-pointer w-full py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-emerald-200 dark:shadow-emerald-900/20 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2 mt-4 text-lg border-b-4 border-emerald-800 active:border-b-0 active:translate-y-1"
+          className="cursor-pointer group w-full py-4 px-6 rounded-2xl font-bold text-base transition-all duration-300
+            relative overflow-hidden
+            bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600
+            text-white shadow-xl shadow-brand-600/30 dark:shadow-brand-900/40
+            disabled:opacity-70 disabled:cursor-not-allowed
+            active:scale-[0.98]"
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Harap tunggu... Menyiapkan naskah ceramah Anda.
-            </>
-          ) : (
-            "Buat Ceramah Sekarang"
-          )}
+          {/* Shimmer overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+
+          <span className="relative flex items-center justify-center gap-2">
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Harap tunggu... Menyiapkan naskah ceramah Anda.
+              </>
+            ) : (
+              <>
+                Buat Ceramah Sekarang
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+              </>
+            )}
+          </span>
         </button>
       </form>
     </div>

@@ -8,26 +8,31 @@ export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Prevent hydration mismatch
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return <div className="w-10 h-10" />; // Placeholder of same size
+    return <div className="w-9 h-9" />;
   }
 
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="cursor-pointer p-2 sm:p-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors border border-transparent dark:border-slate-700 focus:outline-none"
+      className="cursor-pointer relative p-2 sm:p-2.5 rounded-xl transition-all duration-300
+        bg-white/60 dark:bg-white/5
+        border border-brand-200/50 dark:border-brand-700/30
+        text-brand-600 dark:text-brand-300
+        hover:bg-brand-50 dark:hover:bg-brand-900/20
+        hover:border-brand-400 dark:hover:border-brand-500
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50
+        shadow-sm hover:shadow-md hover:shadow-brand-500/10"
       aria-label="Toggle Theme"
     >
       {theme === "dark" ? (
-        <Sun className="w-5 h-5" />
+        <Sun className="w-4 h-4 sm:w-5 sm:h-5" />
       ) : (
-        <Moon className="w-5 h-5" />
+        <Moon className="w-4 h-4 sm:w-5 sm:h-5" />
       )}
     </button>
   );

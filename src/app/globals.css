@@ -2,55 +2,144 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-brand-50: #effdf5;
-  --color-brand-100: #d9fbe8;
-  --color-brand-200: #b5f5d3;
-  --color-brand-300: #7eeab8;
-  --color-brand-400: #42d79a;
-  --color-brand-500: #20bc82;
-  --color-brand-600: #149666;
-  --color-brand-700: #127854;
-  --color-brand-800: #125f44;
-  --color-brand-900: #104e39;
-  --color-brand-950: #082c21;
+  /* === Brand Palette: Hijau Teal Premium + Aksen Emas Islami === */
+  --color-brand-50:  #f0fdf9;
+  --color-brand-100: #ccfbef;
+  --color-brand-200: #99f6df;
+  --color-brand-300: #5eecc9;
+  --color-brand-400: #2dd4b0;
+  --color-brand-500: #14b89a;
+  --color-brand-600: #0d9480;
+  --color-brand-700: #0d786a;
+  --color-brand-800: #0f6057;
+  --color-brand-900: #104f48;
+  --color-brand-950: #032e2a;
+
+  --color-gold-50:   #fffbeb;
+  --color-gold-100:  #fef3c7;
+  --color-gold-200:  #fde68a;
+  --color-gold-300:  #fcd34d;
+  --color-gold-400:  #fbbf24;
+  --color-gold-500:  #f59e0b;
+  --color-gold-600:  #d97706;
+  --color-gold-700:  #b45309;
+  --color-gold-800:  #92400e;
+  --color-gold-900:  #78350f;
+
+  --font-display:   'Amiri', serif;
+  --font-ui:        'Plus Jakarta Sans', sans-serif;
+  --font-body:      'Outfit', sans-serif;
 }
 
 @custom-variant dark (&:is(.dark *));
 
-/* Custom Scrollbar Styles */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ========== Base Reset ========== */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+html {
+  scroll-behavior: smooth;
 }
 
+body {
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== Islamic Geometric Pattern Background ========== */
+.islamic-pattern-bg {
+  background-color: #f0fdf9;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(20,184,154,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(245,158,11,0.05) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%2314b89a' stroke-width='0.4' opacity='0.15'%3E%3Cpolygon points='30,2 55,15 55,45 30,58 5,45 5,15'/%3E%3Cpolygon points='30,10 47,20 47,40 30,50 13,40 13,20'/%3E%3Cline x1='30' y1='2' x2='30' y2='10'/%3E%3Cline x1='55' y1='15' x2='47' y2='20'/%3E%3Cline x1='55' y1='45' x2='47' y2='40'/%3E%3Cline x1='30' y1='58' x2='30' y2='50'/%3E%3Cline x1='5' y1='45' x2='13' y2='40'/%3E%3Cline x1='5' y1='15' x2='13' y2='20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.dark .islamic-pattern-bg {
+  background-color: #0a1628;
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(20,184,154,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(245,158,11,0.04) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%2314b89a' stroke-width='0.4' opacity='0.09'%3E%3Cpolygon points='30,2 55,15 55,45 30,58 5,45 5,15'/%3E%3Cpolygon points='30,10 47,20 47,40 30,50 13,40 13,20'/%3E%3Cline x1='30' y1='2' x2='30' y2='10'/%3E%3Cline x1='55' y1='15' x2='47' y2='20'/%3E%3Cline x1='55' y1='45' x2='47' y2='40'/%3E%3Cline x1='30' y1='58' x2='30' y2='50'/%3E%3Cline x1='5' y1='45' x2='13' y2='40'/%3E%3Cline x1='5' y1='15' x2='13' y2='20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ========== Animations ========== */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(20, 184, 154, 0.3); }
+  50%       { box-shadow: 0 0 0 8px rgba(20, 184, 154, 0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-fade-slide-up   { animation: fadeSlideUp 0.6s ease-out both; }
+.animate-float           { animation: float 4s ease-in-out infinite; }
+.animate-spin-slow       { animation: spin-slow 20s linear infinite; }
+.pulse-glow              { animation: pulse-glow 2s ease-in-out infinite; }
+
+.shimmer-text {
+  background: linear-gradient(90deg, #0d9480 0%, #14b89a 30%, #fbbf24 50%, #14b89a 70%, #0d9480 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ========== Glass Card ========== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(20, 184, 154, 0.15);
+}
+
+.dark .glass-card {
+  background: rgba(10, 22, 40, 0.80);
+  border: 1px solid rgba(20, 184, 154, 0.12);
+}
+
+/* ========== Gold Divider ========== */
+.gold-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+  border: none;
+  margin: 0;
+}
+
+/* ========== Custom Scrollbar ========== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.5); /* gray-400 */
+  background: rgba(20, 184, 154, 0.3);
   border-radius: 10px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 114, 128, 0.8); /* gray-500 */
+  background: rgba(20, 184, 154, 0.6);
 }
-
-/* Dark mode scrollbar */
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.8); /* slate-600 */
+  background: rgba(20, 184, 154, 0.25);
 }
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 1); /* slate-500 */
-}
-
-/* Firefox Support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-}
-
-.dark * {
-  scrollbar-color: rgba(71, 85, 105, 0.8) transparent;
+  scrollbar-color: rgba(20, 184, 154, 0.3) transparent;
 }
